@@ -15,18 +15,9 @@ import streamlit as st
 from urllib.parse import urljoin
 import time
 from openpyxl import Workbook
-from streamlit_option_menu import option_menu 
+
 #%%
-page_title = "lhdbetting scraping app"
-layout = "wide"
-st.set_page_config(page_title=page_title, layout=layout)
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
+st.title("lhdbetting scraping app")
 st.markdown(hide_st_style, unsafe_allow_html=True)
 def scrape(url, key_word, flag):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"}
