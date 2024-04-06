@@ -16,6 +16,17 @@ from urllib.parse import urljoin
 import time
 from openpyxl import Workbook
 #%%
+page_title = "lhdbetting scraping app"
+layout = "wide"
+st.set_page_config(page_title=page_title, layout=layout)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 def scrape(url, key_word, flag):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"}
     page = requests.get(url, headers=headers)
@@ -167,7 +178,7 @@ def breakout_data(all_matches):
     
     big_df = pd.concat(transformed_dfs, ignore_index=True)
     return big_df
-st.title('LHD scraping app')
+
 date_input_user = st.text_input('Enter the date (YYYY-MM-DD):')
 
 # Convert the user input date to datetime format
@@ -176,6 +187,7 @@ date_input_user = pd.to_datetime(date_input_user)
 # Convert the Pandas Timestamp to datetime.date object
 date_input = date_input_user.date()
 key_words = ["League", "Liga", "Serie-A", "Bundesliga", "Ligue-1", "Championship"]
+show_lueague = ["Premier League", "La Liga", "Serie-A", "Bundesliga", "Ligue-1", "Championship"]
 id_key = ['PL 23/24', 'LA 23/24', 'SA 23/24', 'BS 23/24', 'L1 23/24', 'CH 23/24']
 leagues = ["https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures", "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
             "https://fbref.com/en/comps/11/schedule/Serie-A-Scores-and-Fixtures","https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures",
@@ -184,7 +196,7 @@ match_list = []
 butt=st.button('Get recent matches')
 if butt:
     for liga in range(len(leagues)):
-        st.info(f'Downloading {key_words[liga]} matches')
+        st.info(f'Downloading {show_lueague[liga]} matches')
         time.sleep(30)
         key_word = key_words[liga]
         
@@ -238,6 +250,7 @@ if butt:
             file_name="data.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+        st.success('The recent maches is downloaded to your computer')
     
     # Call the function to display the download button
     download_excel(new_matches_to_excel)
