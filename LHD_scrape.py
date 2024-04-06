@@ -167,11 +167,13 @@ def breakout_data(all_matches):
     big_df = pd.concat(transformed_dfs, ignore_index=True)
     return big_df
 
-# Assuming your DataFrame is named df
-date_input = st.text_input('Enter the date (YYYY-MM-DD):')
+date_input_user = st.text_input('Enter the date (YYYY-MM-DD):')
 
 # Convert the user input date to datetime format
-date_input = pd.to_datetime(date_input)
+date_input_user = pd.to_datetime(date_input_user)
+
+# Convert the Pandas Timestamp to datetime.date object
+date_input = date_input_user.date()
 key_words = ["League", "Liga", "Serie-A", "Bundesliga", "Ligue-1", "Championship"]
 id_key = ['PL 23/24', 'LA 23/24', 'SA 23/24', 'BS 23/24', 'L1 23/24', 'CH 23/24']
 leagues = ["https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures", "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
