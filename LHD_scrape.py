@@ -167,7 +167,7 @@ def breakout_data(all_matches):
     
     big_df = pd.concat(transformed_dfs, ignore_index=True)
     return big_df
-
+st.title('LHD scraping app')
 date_input_user = st.text_input('Enter the date (YYYY-MM-DD):')
 
 # Convert the user input date to datetime format
@@ -184,6 +184,7 @@ match_list = []
 butt=st.button('Get recent matches')
 if butt:
     for liga in range(len(leagues)):
+        st.info(f'Downloading {key_words[liga]} matches')
         time.sleep(30)
         key_word = key_words[liga]
         
