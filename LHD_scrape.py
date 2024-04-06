@@ -60,6 +60,8 @@ def filter_data(team_data):
     global df_for_shots,link
     all_matches = []
     for link in range(len(team_data)):
+        if link % 15 == 0:
+            time.sleep(30)
         try:           # Introducing a delay to prevent IP-banning
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"}
     
@@ -242,7 +244,7 @@ if butt:
             file_name="data.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        st.success('The recent maches is downloaded to your computer')
+        #st.success('The recent maches is downloaded to your computer')
     
     # Call the function to display the download button
     download_excel(new_matches_to_excel)
