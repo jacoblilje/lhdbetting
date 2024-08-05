@@ -185,9 +185,9 @@ date_input_end = date_input_user_end.date()
 key_words = ["League", "Liga", "Serie-A", "Bundesliga", "Ligue-1"]
 show_lueague = ["Premier League", "La Liga", "Serie-A", "Bundesliga", "Ligue-1"]
 id_key = ['PL 23/24', 'LA 23/24', 'SA 23/24', 'BS 23/24', 'L1 23/24']
-leagues = ["https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures", "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
-            "https://fbref.com/en/comps/11/schedule/Serie-A-Scores-and-Fixtures","https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures",
-            "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures"]
+leagues = ["https://fbref.com/en/comps/9/2023-2024/schedule/2023-2024-Premier-League-Scores-and-Fixtures", "https://fbref.com/en/comps/12/2023-2024/schedule/2023-2024-La-Liga-Scores-and-Fixtures",
+            "https://fbref.com/en/comps/11/2023-2024/schedule/2023-2024-Serie-A-Scores-and-Fixtures","https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures",
+            "https://fbref.com/en/comps/13/2023-2024/schedule/2023-2024-Ligue-1-Scores-and-Fixtures"]
 match_list = []
 butt=st.button('Get recent matches')
 if butt:
