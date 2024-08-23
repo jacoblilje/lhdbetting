@@ -1,11 +1,10 @@
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
-# """
-# Created on Fri Apr  5 16:08:23 2024
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 23 15:52:47 2024
 
-# @author: jacobliljestrand
-# """
-
+@author: jacobliljestrand
+"""
 
 import pandas as pd
 import requests
@@ -182,73 +181,73 @@ date_input_user_end = pd.to_datetime(date_input_user_end)
 # Convert the Pandas Timestamp to datetime.date object
 date_input = date_input_user.date()
 date_input_end = date_input_user_end.date()
-key_words = ["League", "Liga", "Serie-A", "Bundesliga", "Ligue-1"]
-show_lueague = ["Premier League", "La Liga", "Serie-A", "Bundesliga", "Ligue-1"]
-id_key = ['PL 23/24', 'LA 23/24', 'SA 23/24', 'BS 23/24', 'L1 23/24']
-leagues = ["https://fbref.com/en/comps/9/2023-2024/schedule/2023-2024-Premier-League-Scores-and-Fixtures", "https://fbref.com/en/comps/12/2023-2024/schedule/2023-2024-La-Liga-Scores-and-Fixtures",
-            "https://fbref.com/en/comps/11/2023-2024/schedule/2023-2024-Serie-A-Scores-and-Fixtures","https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures",
-            "https://fbref.com/en/comps/13/2023-2024/schedule/2023-2024-Ligue-1-Scores-and-Fixtures"]
+
+# League selection
+leagues_dict = {
+    "Premier League": ("https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures", "League", "PL 24/25"),
+    "La Liga": ("https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures", "Liga", "LA 24/25"),
+    "Serie-A": ("https://fbref.com/en/comps/11/schedule/Serie-A-Scores-and-Fixtures", "Serie-A", "SA 24/25"),
+    "Bundesliga": ("https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures", "Bundesliga", "BS 24/25"),
+    "Ligue-1": ("https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures", "Ligue-1", "L1 24/25")
+}
+
+# Dropdown for user to select a league
+selected_league = st.selectbox("Select a league to scrape", list(leagues_dict.keys()))
+
 match_list = []
-butt=st.button('Get recent matches')
+butt = st.button('Get recent matches')
 if butt:
-    for liga in range(len(leagues)):
-        st.info(f'Downloading {show_lueague[liga]} matches')
-        time.sleep(60)
-        key_word = key_words[liga]
-        
-        url = leagues[liga]
-        team_link = scrape(url, key_word, 'std')
-        team_link.iloc[:, 2] = pd.to_datetime(team_link.iloc[:, 2], errors='coerce').dt.date
-        team_link = team_link.dropna(subset=[team_link.columns[2]])
-        
-        
-        new_matches_df = team_link[(team_link.iloc[:, 2] >= date_input) & (team_link.iloc[:, 2] <= date_input_end)]
-        
-        try:
-            big_df = filter_data(new_matches_df)
-        
-        
-        
-            big_breakout = breakout_data(big_df)
-            
-            columns_to_drop = ['Home Touches', 'Away Touches', 'Home Crosses', 'Away Crosses', 'Home Clearances', 'Away Clearances', 
-                                'Home Interceptions', 'Away Interceptions', 'Home AerialsWon', 'Away AerialsWon', 'Home LongBalls','Away LongBalls']
-            big_breakout.drop(columns=columns_to_drop, inplace=True)
-            
-            #%%
-            new_column_order = ['Home Team','Away Team', 'Home Fouls','Away Fouls','Home Corners','Away Corners','Home Tackles','Away Tackles', 
-                                  'Home Offsides', 'Away Offsides', 'Home GoalKicks','Away GoalKicks', 'Home ThrowIns','Away ThrowIns',
-                                  'Home Shots on target','Home Shots','Away Shots on target','Away Shots']
-                               
-            
-            big_breakout = big_breakout[new_column_order]   
-            
-            new_column_names = {'Home Team': 'home', 'Away Team': 'away', 'Home Fouls': 'fouls_home','Away Fouls':'fouls_away','Home Corners': 'corners_home',
-                                'Away Corners': 'corners_away','Home Tackles': 'tackles_home', 'Away Tackles': 'tackles_away', 'Home Offsides':'offsides_home',
-                                'Away Offsides':'offsides_away','Home GoalKicks':'goal_kicks_home', 'Away GoalKicks':'goal_kicks_away',
-                                'Home ThrowIns': 'trow_ins_home', 'Away TrowIns':'trow_ins_away','Home Shots on target': 'sot_home','Home Shots': 'shots_home,',
-                                'Away Shots on target':'sot_away', 'Away Shots on target':'sot_away', 'Away Shots':'shots_away'}
-            big_breakout.rename(columns=new_column_names, inplace=True)
-            big_breakout['Liga'] = id_key[liga]
-            match_list.append(big_breakout)
-        except:
-            continue
-    new_matches_to_excel = pd.concat(match_list)
-    new_matches_to_excel.iloc[:, 2:18] = new_matches_to_excel.iloc[:, 2:18].apply(pd.to_numeric, errors='coerce')
-    #%%
-    # Define a function to handle the download action
-    def download_excel(df):
-        df.to_excel("data.xlsx", index=False)  # Write DataFrame to Excel file without index
-        with open("data.xlsx", "rb") as file:
-            btn = file.read()
-        st.download_button(
-            label="Download Excel",
-            data=btn,
-            file_name="data.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        #st.success('The recent maches is downloaded to your computer')
+    league_url, key_word, league_id = leagues_dict[selected_league]
+    st.info(f'Downloading {selected_league} matches')
     
-    # Call the function to display the download button
-    download_excel(new_matches_to_excel)
-            
+    time.sleep(60)
+    
+    team_link = scrape(league_url, key_word, 'std')
+    team_link.iloc[:, 2] = pd.to_datetime(team_link.iloc[:, 2], errors='coerce').dt.date
+    team_link = team_link.dropna(subset=[team_link.columns[2]])
+    
+    new_matches_df = team_link[(team_link.iloc[:, 2] >= date_input) & (team_link.iloc[:, 2] <= date_input_end)]
+    
+    try:
+        big_df = filter_data(new_matches_df)
+        
+        big_breakout = breakout_data(big_df)
+        
+        columns_to_drop = ['Home Touches', 'Away Touches', 'Home Crosses', 'Away Crosses', 'Home Clearances', 'Away Clearances', 
+                            'Home Interceptions', 'Away Interceptions', 'Home AerialsWon', 'Away AerialsWon', 'Home LongBalls','Away LongBalls']
+        big_breakout.drop(columns=columns_to_drop, inplace=True)
+        
+        new_column_order = ['Home Team','Away Team', 'Home Fouls','Away Fouls','Home Corners','Away Corners','Home Tackles','Away Tackles', 
+                              'Home Offsides', 'Away Offsides', 'Home GoalKicks','Away GoalKicks', 'Home ThrowIns','Away ThrowIns',
+                              'Home Shots on target','Home Shots','Away Shots on target','Away Shots']
+        
+        big_breakout = big_breakout[new_column_order]   
+        
+        new_column_names = {'Home Team': 'home', 'Away Team': 'away', 'Home Fouls': 'fouls_home','Away Fouls':'fouls_away','Home Corners': 'corners_home',
+                            'Away Corners': 'corners_away','Home Tackles': 'tackles_home', 'Away Tackles':'tackles_away', 'Home Offsides':'offsides_home',
+                            'Away Offsides':'offsides_away','Home GoalKicks':'goal_kicks_home', 'Away GoalKicks':'goal_kicks_away',
+                            'Home ThrowIns': 'throw_ins_home', 'Away ThrowIns':'throw_ins_away','Home Shots on target': 'sot_home','Home Shots': 'shots_home',
+                            'Away Shots on target':'sot_away', 'Away Shots':'shots_away'}
+        big_breakout.rename(columns=new_column_names, inplace=True)
+        big_breakout['Liga'] = league_id
+        match_list.append(big_breakout)
+        
+        new_matches_to_excel = pd.concat(match_list)
+        new_matches_to_excel.iloc[:, 2:18] = new_matches_to_excel.iloc[:, 2:18].apply(pd.to_numeric, errors='coerce')
+        
+        def download_excel(df):
+            df.to_excel("data.xlsx", index=False)  # Write DataFrame to Excel file without index
+            with open("data.xlsx", "rb") as file:
+                btn = file.read()
+            st.download_button(
+                label="Download Excel",
+                data=btn,
+                file_name="data.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+        
+        # Call the function to display the download button
+        download_excel(new_matches_to_excel)
+        
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
